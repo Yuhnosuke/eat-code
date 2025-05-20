@@ -28,3 +28,17 @@ class Solution:
             dp[i] = dp[i - 2] + dp[i - 1]
 
         return dp[n]
+
+
+# bottom up(space optimized)
+class Solution:
+    def climbStairs(self, n: int) -> int:
+        one_back = 1
+        two_back = 1
+
+        for i in range(2, n + 1):
+            tmp = one_back
+            one_back = two_back + one_back
+            two_back = tmp
+
+        return one_back
