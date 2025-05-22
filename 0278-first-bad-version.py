@@ -11,7 +11,6 @@ class Solution:
             mid = (low + high) // 2
 
             if isBadVersion(mid):
-                ans = mid
                 high = mid - 1
             else:
                 low = mid + 1
