@@ -51,6 +51,35 @@ class Solution:
         return ans if ans != float("inf") else -1
 
 
+# top down 3
+class Solution:
+    def coinChange(self, coins: List[int], amount: int) -> int:
+        def dp(remain_amount: int) -> int:
+            if remain_amount == 0:
+                return 0
+
+            if remain_amount < 0:
+                return -1
+
+            if remain_amount in memo:
+                return memo[remain_amount]
+
+            min_cost = float("inf")
+            memo[remain_amount] = min_cost
+
+            for coin in coins:
+                res = dp(remain_amount - coin)
+
+                if res != -1:
+                    min_cost = min(min_cost, res + 1)
+                    memo[remain_amount] = min_cost
+
+            return min_cost if min_cost != float("inf") else -1
+
+        memo = {}
+        return dp(amount)
+
+
 # bottom up
 class Solution:
     def coinChange(self, coins: List[int], amount: int) -> int:
