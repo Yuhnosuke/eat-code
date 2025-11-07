@@ -2,58 +2,42 @@ class Solution:
     def countUnguarded(
         self, m: int, n: int, guards: List[List[int]], walls: List[List[int]]
     ) -> int:
-        rows, columns = m, n
-        grid = [["."] * columns for _ in range(rows)]
-
-        for gr, gc in guards:
-            grid[gr][gc] = "G"
-        for wr, wc in walls:
-            grid[wr][wc] = "W"
-
+        grid = [["."] * n for _ in range(m)]
         guarded_cells = set()
 
+        for guard, wall in zip_longest(guards, walls):
+            if guard:
+                grid[guard[0]][guard[1]] = "G"
+            if wall:
+                grid[wall[0]][wall[1]] = "W"
+
         def is_invalid(r, c):
-            return r < 0 or r >= rows or c < 0 or c >= columns
+            return r < 0 or r >= m or c < 0 or c >= n
 
         def is_obstructed(r, c):
             return grid[r][c] == "W" or grid[r][c] == "G"
 
-        def dfs_north(r, c):
+        def dfs(r, c, direction):
             if is_invalid(r, c) or is_obstructed(r, c):
                 return
 
             guarded_cells.add((r, c))
-            dfs_north(r - 1, c)
-            return
 
-        def dfs_east(r, c):
-            if is_invalid(r, c) or is_obstructed(r, c):
-                return
+            if direction == "north":
+                dfs(r - 1, c, "north")
+            if direction == "east":
+                dfs(r, c + 1, "east")
+            if direction == "west":
+                dfs(r, c - 1, "west")
+            if direction == "south":
+                dfs(r + 1, c, "south")
 
-            guarded_cells.add((r, c))
-            dfs_east(r, c + 1)
-            return
-
-        def dfs_west(r, c):
-            if is_invalid(r, c) or is_obstructed(r, c):
-                return
-
-            guarded_cells.add((r, c))
-            dfs_west(r, c - 1)
-            return
-
-        def dfs_south(r, c):
-            if is_invalid(r, c) or is_obstructed(r, c):
-                return
-
-            guarded_cells.add((r, c))
-            dfs_south(r + 1, c)
             return
 
         for gr, gc in guards:
-            dfs_north(gr - 1, gc)
-            dfs_east(gr, gc + 1)
-            dfs_west(gr, gc - 1)
-            dfs_south(gr + 1, gc)
+            dfs(gr - 1, gc, "north")
+            dfs(gr, gc + 1, "east")
+            dfs(gr, gc - 1, "west")
+            dfs(gr + 1, gc, "south")
 
-        return rows * columns - len(guarded_cells) - len(walls) - len(guards)
+        return m * n - len(guarded_cells) - len(walls) - len(guards)
