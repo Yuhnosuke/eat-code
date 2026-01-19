@@ -1,18 +1,13 @@
 class Solution:
     def groupAnagrams(self, strs: List[str]) -> List[List[str]]:
-        # key: sorted str, value: original strs
-        anagram_map = defaultdict(list)
+        ordered_to_words = {}
+        for word in strs:
+            ordered = "".join(sorted(word))
+            if ordered not in ordered_to_words:
+                ordered_to_words[ordered] = []
+            ordered_to_words[ordered].append(word)
 
-        for st in strs:
-            sorted_s = "".join(sorted(st))
-            anagram_map[sorted_s].append(st)
-
-        ans = []
-
-        for grouped_strs in anagram_map.values():
-            ans.append(grouped_strs)
-
-        return ans
+        return list(ordered_to_words.values())
 
 
 class Solution:
@@ -23,3 +18,19 @@ class Solution:
             sorted_to_strs["".join(sorted(word))].append(word)
 
         return list(sorted_to_strs.values())
+
+
+class Solution:
+    def groupAnagrams(self, strs: List[str]) -> List[List[str]]:
+        freq_to_words = defaultdict(list)
+
+        for s in strs:
+            f = [0] * 26
+
+            for ch in s:
+                i = ord(ch) - ord("a")
+                f[i] += 1
+
+            freq_to_words[tuple(f)].append(s)
+
+        return list(freq_to_words.values())
