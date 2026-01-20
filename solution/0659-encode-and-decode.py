@@ -1,35 +1,29 @@
 class Solution:
+    delimiter = "#"
 
     def encode(self, strs: List[str]) -> str:
-        delimiter = "#"
         res = ""
-
-        for st in strs:
-            length = len(st)
-            encoded = str(length) + delimiter + st
-
-            res += encoded
-
+        for s in strs:
+            res += str(len(s)) + self.delimiter + s
         return res
 
     def decode(self, s: str) -> List[str]:
-        delimiter = "#"
+        st = 0
         res = []
-        start = 0
 
-        while start < len(s):
-            end = start
+        while st < len(s):
+            en = st
 
-            while s[end] != delimiter:
-                end += 1
+            while s[en] != self.delimiter:
+                en += 1
 
-            length = s[start:end]
+            length = s[st:en]
 
-            start = end + 1
-            end = start + int(length)
+            st = en + 1
+            en = st + int(length)
 
-            res.append(s[start:end])
+            res.append(s[st:en])
 
-            start = end
+            st = en
 
         return res
